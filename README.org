@@ -1,0 +1,46 @@
+
+* EXWM Workspace Group
+  Rough solution for managing workspace groups for EXWM
+
+** Configuration
+   #+begin_src elisp
+   (require 'exwm-workspace-group)
+   (ewg/init (list "HDMI-1-1" "DVI-I-1" "HDMI-0"))  ; pass a list of connected monitor names found by xrandr
+   #+end_src
+
+** Note
+   - Each workspace in the current group corresponds to each monitor
+   - You can create, delete or switch between groups
+   - Currently, it supports only dual and triple monitor configurations
+     - However, you can easily define your own ~ewg/xrandr-*-monitor~ and modify ~ewg/init~
+   - ~ewg/init~ modifies some variables defined in ~exwm~ package:
+     - ~exwm-workspace-number~
+     - ~exwm-randr-workspace-monitor-plist~
+     So, be careful of conflicts with your existing EXWM configuration.
+   - Interactive functions
+     - ~ewg/add-group~
+     - ~ewg/delete-current-group~
+     - ~ewg/delete-other-groups~
+     - ~ewg/switch-next-group~
+     - ~ewg/switch-previous-group~
+     - ~ewg/other-workspace-in-group~
+     - ~ewg/other-workspace-in-group-backwards~
+     - ~ewg/swap-current-group-number~
+   - You can also switch to a specific group by using ~ewg/switch-create~ instead of ~exwm-workspace-switch-create~
+     #+begin_src elisp
+     ;; This exampmle is modified from https://github.com/ch11ng/exwm/wiki#global-key-bindings
+     (setq exwm-input-global-keys
+           `(;; ...
+             ;; other bindings here
+             ;; ...
+             ,@(mapcar (lambda (i)
+                         `(,(kbd (format "s-%d" i)) .
+                           (lambda ()
+                             (interactive)
+                             (ewg/switch-create ,i))))
+                       (number-sequence 0 9))))
+     #+end_src
+   - ~exwm-workspace-group~ is compatible with ~tab-bar-mode~
+
+** Related work
+   - https://github.com/SqrtMinusOne/perspective-exwm.el
