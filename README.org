@@ -20,7 +20,7 @@
    - Interactive functions
      - ~ewg/add-group~
      - ~ewg/delete-current-group~
-     - ~ewg/delete-other-groups~
+     - +~ewg/delete-other-groups~+ (this function has a bug; not recomended to use it yet)
      - ~ewg/switch-next-group~
      - ~ewg/switch-previous-group~
      - ~ewg/other-workspace-in-group~

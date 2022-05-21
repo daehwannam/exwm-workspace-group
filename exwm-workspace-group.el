@@ -83,7 +83,7 @@
     (let ((prev-workspace-idx exwm-workspace-current-index))
       (dolist (i (reverse (number-sequence 0 (1- ewg/max-group-size))))
         (exwm-workspace-delete (+ (* group-idx ewg/max-group-size) i)))
-      (let ((new-workspace-idx (% (+ prev-workspace-idx (exwm-workspace--count))
+      (let ((new-workspace-idx (% (+ prev-workspace-idx (- ewg/max-group-size) (exwm-workspace--count))
                                   (exwm-workspace--count))))
         (exwm-workspace-switch new-workspace-idx))))
 
@@ -135,7 +135,7 @@
               (dolist (i (reverse (number-sequence 0 (1- (exwm-workspace--count)))))
                 (unless (member i workspace-indices-in-group)
                   (exwm-workspace-delete i))))
-            (exwm-workspace-switch (% prev-workspace-idx (exwm-workspace--count))))
+            (exwm-workspace-switch (% prev-workspace-idx ewg/max-group-size)))
         (message "Canceled closing other workspace groups"))))
 
   (defun ewg/workspace-swap-by-workspace-indices (index1 index2)
