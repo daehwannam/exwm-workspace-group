@@ -40,7 +40,7 @@
                              (ewg/switch-create ,i))))
                        (number-sequence 0 9))))
      #+end_src
-   - ~exwm-workspace-group~ is compatible with ~tab-bar-mode~
+   - ~exwm-workspace-group~ is also compatible with ~tab-bar-mode~
 
 ** Related work
-   - https://github.com/SqrtMinusOne/perspective-exwm.el
+   - Another approach using ~perspective~: https://github.com/SqrtMinusOne/perspective-exwm.el
