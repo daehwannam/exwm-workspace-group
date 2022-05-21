@@ -111,17 +111,20 @@
         (exwm-workspace-add (+ (* next-group-idx ewg/max-group-size) i)))
       (exwm-workspace-switch new-workspace-idx)))
 
-  (defun ewg/delete-current-group ()
-    (interactive)
-    (if (<= (exwm-workspace--count) ewg/max-group-size)
-        (user-error "Attempt to delete the sole workspace group")
-      (if (y-or-n-p (format "Are you sure you want to close this workspace group? "))
-	      (ewg/delete
-           (ewg/get-group-index exwm-workspace-current-index))
-        (message "Canceled closing the current workspace group"))))
+  (progn
+    ;; [CAUTION]
+    ;; Many deletions of workspace cause the following error:
+    ;; "Attempt to delete a surrogate minibuffer frame"
 
-  (comment
-    ;; this function has a bug
+    (defun ewg/delete-current-group ()
+      (interactive)
+      (if (<= (exwm-workspace--count) ewg/max-group-size)
+          (user-error "Attempt to delete the sole workspace group")
+        (if (y-or-n-p (format "Are you sure you want to close this workspace group? "))
+	        (ewg/delete
+             (ewg/get-group-index exwm-workspace-current-index))
+          (message "Canceled closing the current workspace group"))))
+
     (defun ewg/delete-other-groups ()
       (interactive)
       (if (<= (exwm-workspace--count) ewg/max-group-size)
