@@ -1,6 +1,6 @@
 
 * EXWM Workspace Group
-  An EXWM extension for managing workspace units in a multiple monitor environment by grouping the units
+  An EXWM extension for managing workspace units in a multiple monitor environment by grouping the units.
 
 ** Configuration
    #+begin_src elisp
@@ -42,9 +42,9 @@
 
 ** Bug
    Functions ~ewg/delete-current-group~ and ~ewg/delete-other-groups~ are implemented to delete groups.
-   However, many deletions of workspaces cause the following error: "Attempt to delete a surrogate minibuffer frame"
+   However, many deletions of workspaces cause the following error: "Attempt to delete a surrogate minibuffer frame".
 
-   The problem may be soloved by deleting groups virtually but keeping workspaces for the future creation of new groups
+   The problem may be soloved by deleting groups virtually but keeping workspaces for the future creation of new groups.
 
 ** Related work
    - Another approach, which is based on ~perspective~: https://github.com/SqrtMinusOne/perspective-exwm.el
