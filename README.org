@@ -13,7 +13,7 @@
    - You can create, delete or switch between groups
    - Currently, it supports only dual and triple monitor configurations
      - However, you can easily define your own ~ewg/xrandr-*-monitor~ and modify ~ewg/init~
-   - ~ewg/init~ modifies some variables defined in ~exwm~ package:
+   - ~ewg/init~ modifies values of some variables defined in ~exwm~ package:
      - ~exwm-workspace-number~
      - ~exwm-randr-workspace-monitor-plist~
      So, be careful of conflicts with your existing EXWM configuration.
