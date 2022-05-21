@@ -1,6 +1,6 @@
 
 * EXWM Workspace Group
-  EXWM extension for managing workspace groups
+  An extension for managing EXWM workspace groups
 
 ** Configuration
    #+begin_src elisp
