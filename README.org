@@ -19,7 +19,6 @@
      So, be careful of conflicts with your existing EXWM configuration.
    - Interactive functions
      - ~ewg/add-group~
-     - 
      - ~ewg/switch-next-group~
      - ~ewg/switch-previous-group~
      - ~ewg/other-workspace-in-group~
@@ -41,7 +40,7 @@
      #+end_src
    - ~exwm-workspace-group~ is also compatible with ~tab-bar-mode~
 
-** Limitation
+** Bug
    Functions ~ewg/delete-current-group~ and ~ewg/delete-other-groups~ are implemented to delete groups.
    However, many deletions of workspaces cause the following error: "Attempt to delete a surrogate minibuffer frame"
 
