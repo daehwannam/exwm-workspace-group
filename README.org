@@ -1,6 +1,6 @@
 
 * EXWM Workspace Group
-  An EXWM extension for managing workspace groups
+  An EXWM extension for managing workspace units by grouping them in multiple monitor environment
 
 ** Configuration
    #+begin_src elisp
