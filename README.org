@@ -20,7 +20,6 @@
    - Interactive functions
      - ~ewg/add-group~
      - ~ewg/delete-current-group~
-     - ~ewg/delete-other-groups~ (this function has a bug; not recomended to use it yet)
      - ~ewg/switch-next-group~
      - ~ewg/switch-previous-group~
      - ~ewg/other-workspace-in-group~
@@ -43,4 +42,4 @@
    - ~exwm-workspace-group~ is also compatible with ~tab-bar-mode~
 
 ** Related work
-   - Another approach using ~perspective~: https://github.com/SqrtMinusOne/perspective-exwm.el
+   - Another approach, which is based on ~perspective~: https://github.com/SqrtMinusOne/perspective-exwm.el

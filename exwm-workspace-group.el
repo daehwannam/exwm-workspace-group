@@ -120,23 +120,25 @@
            (ewg/get-group-index exwm-workspace-current-index))
         (message "Canceled closing the current workspace group"))))
 
-  (defun ewg/delete-other-groups ()
-    (interactive)
-    (if (<= (exwm-workspace--count) ewg/max-group-size)
-        (user-error "There's no other workspace group")
-      (if (y-or-n-p (format "Are you sure you want to close other workspace groups? "))
-          (let ((prev-workspace-idx exwm-workspace-current-index))
-            (let* ((group-idx (ewg/get-group-index exwm-workspace-current-index))
-                   (first-workspace-idx-in-group (* group-idx ewg/max-group-size))
-                   (workspace-indices-in-group
-                    (number-sequence first-workspace-idx-in-group
-                                     (+ first-workspace-idx-in-group
-                                        (1- ewg/max-group-size)))))
-              (dolist (i (reverse (number-sequence 0 (1- (exwm-workspace--count)))))
-                (unless (member i workspace-indices-in-group)
-                  (exwm-workspace-delete i))))
-            (exwm-workspace-switch (% prev-workspace-idx ewg/max-group-size)))
-        (message "Canceled closing other workspace groups"))))
+  (comment
+    ;; this function has a bug
+    (defun ewg/delete-other-groups ()
+      (interactive)
+      (if (<= (exwm-workspace--count) ewg/max-group-size)
+          (user-error "There's no other workspace group")
+        (if (y-or-n-p (format "Are you sure you want to close other workspace groups? "))
+            (let ((prev-workspace-idx exwm-workspace-current-index))
+              (let* ((group-idx (ewg/get-group-index exwm-workspace-current-index))
+                     (first-workspace-idx-in-group (* group-idx ewg/max-group-size))
+                     (workspace-indices-in-group
+                      (number-sequence first-workspace-idx-in-group
+                                       (+ first-workspace-idx-in-group
+                                          (1- ewg/max-group-size)))))
+                (dolist (i (reverse (number-sequence 0 (1- (exwm-workspace--count)))))
+                  (unless (member i workspace-indices-in-group)
+                    (exwm-workspace-delete i))))
+              (exwm-workspace-switch (% prev-workspace-idx ewg/max-group-size)))
+          (message "Canceled closing other workspace groups")))))
 
   (defun ewg/workspace-swap-by-workspace-indices (index1 index2)
     (exwm-workspace-swap (exwm-workspace--workspace-from-frame-or-index index1)
