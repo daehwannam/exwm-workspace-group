@@ -10,7 +10,7 @@
 
 ** Note
    - Each workspace in the current group corresponds to each monitor
-   - You can create, delete or switch between groups
+   - You can create, +delete+ or switch between groups
    - Currently, it supports only dual and triple monitor configurations
      - However, you can easily define your own ~ewg/xrandr-*-monitor~ and modify ~ewg/init~
    - ~ewg/init~ modifies values of some variables defined in ~exwm~ package:
