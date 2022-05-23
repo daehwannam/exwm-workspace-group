@@ -24,6 +24,7 @@
 
 (defvar ewg/max-group-size nil "the number of monitors")
 (defvar ewg/max-num-groups 10 "the maximum number of groups")
+(defvar ewg/keeping-group-0 t "it keeps group 0 to prevent to try to delete a surrogate minibuffer frame")
 
 (defun ewg/init (monitor-names)
   (setq ewg/monitor-names monitor-names)
@@ -111,47 +112,53 @@
         (exwm-workspace-add (+ (* next-group-idx ewg/max-group-size) i)))
       (exwm-workspace-switch new-workspace-idx)))
 
-  (progn
-    ;; [CAUTION]
-    ;; Many deletions of workspace cause the following error:
-    ;; "Attempt to delete a surrogate minibuffer frame"
-
-    (defun ewg/delete-current-group ()
-      (interactive)
+  (defun ewg/delete-current-group ()
+    (interactive)
+    (if (and ewg/keeping-group-0 (= (ewg/get-group-index exwm-workspace-current-index) 0))
+        (user-error "Group-0 cannot be deleted")
       (if (<= (exwm-workspace--count) ewg/max-group-size)
           (user-error "Attempt to delete the sole workspace group")
         (if (y-or-n-p (format "Are you sure you want to close this workspace group? "))
 	        (ewg/delete
              (ewg/get-group-index exwm-workspace-current-index))
-          (message "Canceled closing the current workspace group"))))
+          (message "Canceled closing the current workspace group")))))
 
-    (defun ewg/delete-other-groups ()
-      (interactive)
-      (if (<= (exwm-workspace--count) ewg/max-group-size)
-          (user-error "There's no other workspace group")
-        (if (y-or-n-p (format "Are you sure you want to close other workspace groups? "))
-            (let ((prev-workspace-idx exwm-workspace-current-index))
-              (let* ((group-idx (ewg/get-group-index exwm-workspace-current-index))
-                     (first-workspace-idx-in-group (* group-idx ewg/max-group-size))
-                     (workspace-indices-in-group
-                      (number-sequence first-workspace-idx-in-group
-                                       (+ first-workspace-idx-in-group
-                                          (1- ewg/max-group-size)))))
-                (dolist (i (reverse (number-sequence 0 (1- (exwm-workspace--count)))))
-                  (unless (member i workspace-indices-in-group)
-                    (exwm-workspace-delete i))))
-              (exwm-workspace-switch (% prev-workspace-idx ewg/max-group-size)))
-          (message "Canceled closing other workspace groups")))))
+  (defun ewg/delete-other-groups ()
+    (interactive)
+    (if (<= (exwm-workspace--count)
+            (+ ewg/max-group-size (if (and ewg/keeping-group-0
+                                           (not (= (ewg/get-group-index exwm-workspace-current-index) 0)))
+                                      ewg/max-group-size 0)))
+        (user-error "There's no other workspace group")
+      (if (y-or-n-p (format "Are you sure you want to close other workspace groups? "))
+          (let ((prev-workspace-idx exwm-workspace-current-index))
+            (let* ((group-idx (ewg/get-group-index exwm-workspace-current-index))
+                   (first-workspace-idx-in-group (* group-idx ewg/max-group-size))
+                   (workspace-indices-in-group
+                    (number-sequence first-workspace-idx-in-group
+                                     (+ first-workspace-idx-in-group
+                                        (1- ewg/max-group-size))))
+                   (workspace-indices-in-0th-group
+                    (number-sequence 0 (1- ewg/max-group-size))))
+              (dolist (i (reverse (number-sequence 0 (1- (exwm-workspace--count)))))
+                (unless (or (member i workspace-indices-in-group)
+                            (when ewg/keeping-group-0
+                              (member i workspace-indices-in-0th-group)))
+                  (exwm-workspace-delete i))))
+            (exwm-workspace-switch (% prev-workspace-idx ewg/max-group-size)))
+        (message "Canceled closing other workspace groups"))))
 
   (defun ewg/workspace-swap-by-workspace-indices (index1 index2)
     (exwm-workspace-swap (exwm-workspace--workspace-from-frame-or-index index1)
                          (exwm-workspace--workspace-from-frame-or-index index2)))
 
   (defun ewg/swap (group-idx1 group-idx2)
-    (dotimes (i ewg/max-group-size)
-      (ewg/workspace-swap-by-workspace-indices
-       (+ (* group-idx1 ewg/max-group-size) i)
-       (+ (* group-idx2 ewg/max-group-size) i))))
+    (if (and ewg/keeping-group-0 (or (= index1 0) (= index2 0)))
+        (user-error "Group-0 cannot be swapped")
+      (dotimes (i ewg/max-group-size)
+        (ewg/workspace-swap-by-workspace-indices
+         (+ (* group-idx1 ewg/max-group-size) i)
+         (+ (* group-idx2 ewg/max-group-size) i)))))
 
   (defun ewg/swap-current-group-number (group-number)
     (interactive "nEnter workspace group number: ")

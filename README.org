@@ -10,7 +10,7 @@
 
 ** Note
    - Each workspace in the current group corresponds to each monitor
-   - You can create, +delete+ or switch between groups
+   - You can create, delete or switch between groups
    - Currently, it supports only dual and triple monitor configurations
      - However, you can easily define your own ~ewg/xrandr-*-monitor~ and modify ~ewg/init~
    - ~ewg/init~ modifies values of some variables defined in ~exwm~ package:
@@ -21,9 +21,11 @@
      - ~ewg/add-group~
      - ~ewg/switch-next-group~
      - ~ewg/switch-previous-group~
+     - ~ewg/delete-current-group~ (the 0th group cannot be deleted by default, see Limitation section)
+     - ~ewg/delete-other-groups~~ (the 0th group cannot be deleted by default, see Limitation section)
      - ~ewg/other-workspace-in-group~
      - ~ewg/other-workspace-in-group-backwards~
-     - ~ewg/swap-current-group-number~
+     - ~ewg/swap-current-group-number~ (the 0th group cannot be swapped by default, see Limitation section)
    - You can also switch to a specific group by using ~ewg/switch-create~ instead of ~exwm-workspace-switch-create~
      #+begin_src elisp
      ;; This exampmle is modified from https://github.com/ch11ng/exwm/wiki#global-key-bindings
@@ -40,11 +42,9 @@
      #+end_src
    - ~exwm-workspace-group~ is also compatible with ~tab-bar-mode~
 
-** Bug
-   Functions ~ewg/delete-current-group~ and ~ewg/delete-other-groups~ are implemented to delete groups.
-   However, many deletions of workspaces cause the following error: "Attempt to delete a surrogate minibuffer frame".
-
-   (The problem may be soloved by deleting groups virtually but keeping workspaces for the future creation of new groups. However, this feature is currently not implemented.)
+** Limitation
+   If we try to delete the 0th group, it would cause the error "Attempt to delete a surrogate minibuffer frame".
+   Therfore, deleting the 0th group is prohibited by default as setting ~ewg/keeping-group-0~ to ~t~.
 
 ** Related work
    - Another approach, which is based on ~perspective~: https://github.com/SqrtMinusOne/perspective-exwm.el
