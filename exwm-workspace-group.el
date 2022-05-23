@@ -72,7 +72,7 @@
 
     (defun ewg/other-workspace-in-group-backwards () (interactive) (ewg/other-workspace-in-group -1)))
 
-  (defun ewg/switch-create (group-idx)
+  (defun ewg/switch-create-group (group-idx)
     (let* ((current-member-idx (ewg/get-group-member-idx exwm-workspace-current-index))
            (new-workspace-idx (+ (* group-idx ewg/max-group-size)
                                  current-member-idx)))
@@ -95,7 +95,7 @@
       (let* ((current-group-idx (ewg/get-group-index exwm-workspace-current-index))
              (num-groups (1+ (ewg/get-last-group-index)))
              (next-group-idx (% (+ current-group-idx count num-groups) num-groups)))
-        (ewg/switch-create next-group-idx))))
+        (ewg/switch-create-group next-group-idx))))
 
   (defun ewg/switch-previous-group ()
     (interactive)
@@ -152,7 +152,7 @@
     (exwm-workspace-swap (exwm-workspace--workspace-from-frame-or-index index1)
                          (exwm-workspace--workspace-from-frame-or-index index2)))
 
-  (defun ewg/swap (group-idx1 group-idx2)
+  (defun ewg/swap-by-group-indices (group-idx1 group-idx2)
     (if (and ewg/keeping-group-0 (or (= index1 0) (= index2 0)))
         (user-error "Group-0 cannot be swapped")
       (dotimes (i ewg/max-group-size)
@@ -168,7 +168,7 @@
             (current-group-idx (ewg/get-group-index exwm-workspace-current-index)))
         (if (= group-idx current-group-idx)
             (user-error "Cannot swap with the same workspace group")
-          (ewg/swap current-group-idx group-idx))))))
+          (ewg/swap-by-group-indices current-group-idx group-idx))))))
 
 
 (progn

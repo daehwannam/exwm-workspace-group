@@ -21,12 +21,12 @@
      - ~ewg/add-group~
      - ~ewg/switch-next-group~
      - ~ewg/switch-previous-group~
-     - ~ewg/delete-current-group~ (the 0th group cannot be deleted by default, see Limitation section)
-     - ~ewg/delete-other-groups~~ (the 0th group cannot be deleted by default, see Limitation section)
+     - ~ewg/delete-current-group  ; (the 0th group cannot be deleted by default, see Limitation section)~
+     - ~ewg/delete-other-groups  ; (the 0th group cannot be deleted by default, see Limitation section)~
      - ~ewg/other-workspace-in-group~
      - ~ewg/other-workspace-in-group-backwards~
-     - ~ewg/swap-current-group-number~ (the 0th group cannot be swapped by default, see Limitation section)
-   - You can also switch to a specific group by using ~ewg/switch-create~ instead of ~exwm-workspace-switch-create~
+     - ~ewg/swap-current-group-number  ; (the 0th group cannot be swapped by default, see Limitation section)~
+   - You can also switch to a specific group by using ~ewg/switch-create-group~ instead of ~exwm-workspace-switch-create~
      #+begin_src elisp
      ;; This exampmle is modified from https://github.com/ch11ng/exwm/wiki#global-key-bindings
      (setq exwm-input-global-keys
@@ -37,7 +37,7 @@
                          `(,(kbd (format "s-%d" i)) .
                            (lambda ()
                              (interactive)
-                             (ewg/switch-create ,i))))
+                             (ewg/switch-create-group ,i))))
                        (number-sequence 0 9))))
      #+end_src
    - ~exwm-workspace-group~ is also compatible with ~tab-bar-mode~
