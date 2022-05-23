@@ -129,7 +129,8 @@
             (+ ewg/max-group-size (if (and ewg/keeping-group-0
                                            (not (= (ewg/get-group-index exwm-workspace-current-index) 0)))
                                       ewg/max-group-size 0)))
-        (user-error "There's no other workspace group")
+        (user-error (concat "There's no other workspace group"
+                            (if ewg/keeping-group-0 " except Group-0" "")))
       (if (y-or-n-p (format "Are you sure you want to close other workspace groups? "))
           (let ((prev-workspace-idx exwm-workspace-current-index))
             (let* ((group-idx (ewg/get-group-index exwm-workspace-current-index))
