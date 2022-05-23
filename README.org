@@ -11,6 +11,7 @@
 ** Note
    - Each workspace in the current group corresponds to each monitor
    - You can create, delete or switch between groups
+     - Deleting the 0th group is prohibited. See Limitation section.
    - Currently, it supports only dual and triple monitor configurations
      - However, you can easily define your own ~ewg/xrandr-*-monitor~ and modify ~ewg/init~
    - ~ewg/init~ modifies values of some variables defined in ~exwm~ package:
@@ -21,11 +22,11 @@
      - ~ewg/add-group~
      - ~ewg/switch-next-group~
      - ~ewg/switch-previous-group~
-     - ~ewg/delete-current-group  ; (the 0th group cannot be deleted by default, see Limitation section)~
-     - ~ewg/delete-other-groups  ; (the 0th group cannot be deleted by default, see Limitation section)~
+     - ~ewg/delete-current-group  ; the 0th group cannot be deleted by default~
+     - ~ewg/delete-other-groups  ; the 0th group cannot be deleted by default~
      - ~ewg/other-workspace-in-group~
      - ~ewg/other-workspace-in-group-backwards~
-     - ~ewg/swap-current-group-number  ; (the 0th group cannot be swapped by default, see Limitation section)~
+     - ~ewg/swap-current-group-number  ; the 0th group cannot be swapped by default~
    - You can also switch to a specific group by using ~ewg/switch-create-group~ instead of ~exwm-workspace-switch-create~
      #+begin_src elisp
      ;; This exampmle is modified from https://github.com/ch11ng/exwm/wiki#global-key-bindings
