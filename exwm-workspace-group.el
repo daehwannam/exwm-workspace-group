@@ -26,7 +26,7 @@
 (defvar ewg/max-num-groups 10 "the maximum number of groups")
 (defvar ewg/keeping-group-0 t "it keeps group 0 to prevent to try to delete a surrogate minibuffer frame")
 
-(defun ewg/init (monitor-names)
+(defun ewg/init (monitor-names &optional xrandr-update)
   (setq ewg/monitor-names monitor-names)
   (if ewg/monitor-names
       (setq ewg/max-group-size (length monitor-names))
@@ -34,14 +34,17 @@
   ;; initial num of workspaces
   (setq exwm-workspace-number ewg/max-group-size)
   (setq exwm-randr-workspace-monitor-plist (ewg/get-exwm-randr-workspace-monitor-plist ewg/max-num-groups))
-  (let ((xrandr-update
-         (pcase ewg/max-group-size
-           (1 (comment "do nothing"))
-           (2 'ewg/xrandr-dual-monitor)
-           (3 'ewg/xrandr-triple-monitor)
-           (t (error "The layout is not implemented")))))
-    (when xrandr-update
-      (add-hook 'exwm-randr-screen-change-hook xrandr-update)))
+
+  (unless xrandr-update
+    (setq xrandr-update
+          (pcase ewg/max-group-size
+            (1 (comment "do nothing"))
+            (2 'ewg/xrandr-dual-monitor-update)
+            (3 'ewg/xrandr-triple-monitor-update)
+            (t (error "The layout is not implemented")))))
+  (when xrandr-update
+    (add-hook 'exwm-randr-screen-change-hook xrandr-update))
+
   (exwm-randr-enable))
 
 (progn
@@ -194,7 +197,7 @@
 
   (progn
     ;; monitor deployment layout
-    (defun ewg/xrandr-dual-monitor ()
+    (defun ewg/xrandr-dual-monitor-update ()
       (assert (= (length ewg/monitor-names) 2))
       (start-process-shell-command
        "xrandr" nil
@@ -207,7 +210,7 @@
         ;; `exwm-base-input-simulation-keys' has many commands
         (exwm-randr-refresh)))
 
-    (defun ewg/xrandr-triple-monitor ()
+    (defun ewg/xrandr-triple-monitor-update ()
       (assert (= (length ewg/monitor-names) 3))
       (start-process-shell-command
        "xrandr" nil
