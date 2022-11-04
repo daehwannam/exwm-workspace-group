@@ -25,6 +25,7 @@
 (defvar ewg/max-group-size nil "the number of monitors")
 (defvar ewg/max-num-groups 10 "the maximum number of groups")
 (defvar ewg/keeping-group-0 t "it keeps group 0 to prevent to try to delete a surrogate minibuffer frame")
+(defvar ewg/workspace-start-number 0 "it should be 0 or 1")
 
 (defun ewg/init (monitor-names &optional xrandr-update)
   (setq ewg/monitor-names monitor-names)
@@ -157,7 +158,7 @@
                          (exwm-workspace--workspace-from-frame-or-index index2)))
 
   (defun ewg/swap-by-group-indices (group-idx1 group-idx2)
-    (if (and ewg/keeping-group-0 (or (= index1 0) (= index2 0)))
+    (if (and ewg/keeping-group-0 (or (= group-idx1 0) (= group-idx2 0)))
         (user-error "Group-0 cannot be swapped")
       (dotimes (i ewg/max-group-size)
         (ewg/workspace-swap-by-workspace-indices
@@ -168,7 +169,7 @@
     (interactive "nEnter workspace group number: ")
     (if (> group-number (exwm-workspace--count))
         (user-error "Workspace group number is out of range")
-      (let ((group-idx (- group-number exwm-my-workspace-start-number))
+      (let ((group-idx (- group-number ewg/workspace-start-number))
             (current-group-idx (ewg/get-group-index exwm-workspace-current-index)))
         (if (= group-idx current-group-idx)
             (user-error "Cannot swap with the same workspace group")
