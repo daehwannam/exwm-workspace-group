@@ -3,49 +3,51 @@
   An EXWM extension for managing workspace units in a multiple monitor environment by grouping the units.
 
 ** Configuration
-   #+begin_src elisp
-   (require 'exwm-workspace-group)
-   (ewg/init (list "HDMI-1-1" "DVI-I-1" "HDMI-0"))  ; pass a list of connected monitor names found by xrandr
-   #+end_src
+#+begin_src elisp
+(require 'exwm-workspace-group)
+(ewg/init (list "HDMI-1-1" "DVI-I-1" "HDMI-0"))  ; pass a list of connected monitor names found by xrandr
+#+end_src
 
 ** Note
-   - Each workspace in the current group corresponds to each monitor
-   - You can create, delete or switch between groups
-     - However, deleting the 0th group is prohibited. See Limitation section.
-   - Currently, it supports only dual and triple monitor configurations
-     - Instead, you can easily define your own ~ewg/xrandr-*-monitor~ and modify ~ewg/init~
-   - ~ewg/init~ modifies values of some variables defined in ~exwm~ package:
-     - ~exwm-workspace-number~
-     - ~exwm-randr-workspace-monitor-plist~
-     So, be careful of conflicts with your existing EXWM configuration.
-   - Interactive functions
-     - ~ewg/add-group~
-     - ~ewg/switch-next-group~
-     - ~ewg/switch-previous-group~
-     - ~ewg/delete-current-group  ; the 0th group cannot be deleted by default~
-     - ~ewg/delete-other-groups  ; the 0th group cannot be deleted by default~
-     - ~ewg/other-workspace-in-group~
-     - ~ewg/other-workspace-in-group-backwards~
-     - ~ewg/swap-current-group-number  ; the 0th group cannot be swapped by default~
-   - You can also switch to a specific group by using ~ewg/switch-create-group~ instead of ~exwm-workspace-switch-create~
-     #+begin_src elisp
-     ;; This exampmle is modified from https://github.com/ch11ng/exwm/wiki#global-key-bindings
-     (setq exwm-input-global-keys
-           `(;; ...
-             ;; other bindings here
-             ;; ...
-             ,@(mapcar (lambda (i)
-                         `(,(kbd (format "s-%d" i)) .
-                           (lambda ()
-                             (interactive)
-                             (ewg/switch-create-group ,i))))
-                       (number-sequence 0 9))))
-     #+end_src
-   - ~exwm-workspace-group~ is also compatible with ~tab-bar-mode~
+- Each workspace in the current group corresponds to each monitor
+- You can create, delete or switch between groups
+  - However, deleting the 0th group is prohibited. See Limitation section.
+- Currently, it supports only dual and triple monitor configurations
+  - Instead, you can easily define your own ~ewg/xrandr-*-monitor~ and modify ~ewg/init~
+- ~ewg/init~ modifies values of some variables defined in ~exwm~ package:
+  - ~exwm-workspace-number~
+  - ~exwm-randr-workspace-monitor-plist~
+  So, be careful of conflicts with your existing EXWM configuration.
+- Interactive functions
+  - ~ewg/add-group~
+  - ~ewg/switch-next-group~
+  - ~ewg/switch-previous-group~
+  - ~ewg/delete-current-group  ; the 0th group cannot be deleted by default~
+  - ~ewg/delete-other-groups  ; the 0th group cannot be deleted by default~
+  - ~ewg/other-workspace-in-group~
+  - ~ewg/other-workspace-in-group-backwards~
+  - ~ewg/swap-with-other-workspace-in-group~
+  - ~ewg/swap-with-other-workspace-in-group-backwards~
+  - ~ewg/swap-current-group-number  ; the 0th group cannot be swapped by default~
+- You can also switch to a specific group by using ~ewg/switch-create-group~ instead of ~exwm-workspace-switch-create~
+  #+begin_src elisp
+  ;; This exampmle is modified from https://github.com/ch11ng/exwm/wiki#global-key-bindings
+  (setq exwm-input-global-keys
+        `(;; ...
+          ;; other bindings here
+          ;; ...
+          ,@(mapcar (lambda (i)
+                      `(,(kbd (format "s-%d" i)) .
+                        (lambda ()
+                          (interactive)
+                          (ewg/switch-create-group ,i))))
+                    (number-sequence 0 9))))
+  #+end_src
+- ~exwm-workspace-group~ is also compatible with ~tab-bar-mode~
 
 ** Limitation
-   If we try to delete the 0th group, it would cause the error "Attempt to delete a surrogate minibuffer frame".
-   Therfore, deleting the 0th group is prohibited by default as setting ~ewg/keeping-group-0~ to ~t~.
+If we try to delete the 0th group, it would cause the error "Attempt to delete a surrogate minibuffer frame".
+Therfore, deleting the 0th group is prohibited by default as setting ~ewg/keeping-group-0~ to ~t~.
 
 ** Related work
-   - Another approach, which is based on ~perspective~: https://github.com/SqrtMinusOne/perspective-exwm.el
+- Another approach, which is based on ~perspective~: https://github.com/SqrtMinusOne/perspective-exwm.el

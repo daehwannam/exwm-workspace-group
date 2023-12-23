@@ -60,21 +60,36 @@
   (defun ewg/get-group-member-idx (workspace-idx)
     (- workspace-idx (* (ewg/get-group-index workspace-idx)
                         ewg/max-group-size)))
+
+  (defun ewg/get-index-of-other-workspace-in-group (count)
+    (let* ((group-idx (ewg/get-group-index exwm-workspace-current-index))
+           (group-size (min (- (exwm-workspace--count)
+                               (* group-idx ewg/max-group-size))
+                            ewg/max-group-size))
+           (member-idx (- exwm-workspace-current-index
+                          (* group-idx ewg/max-group-size)))
+           (next-member-idx (% (+ count member-idx group-size) group-size))
+           (next-workspace-idx (+ (* group-idx ewg/max-group-size)
+                                  next-member-idx)))
+      next-workspace-idx))
+
   (progn
     (defun ewg/other-workspace-in-group (count)
       (interactive "p")
-      (let* ((group-idx (ewg/get-group-index exwm-workspace-current-index))
-             (group-size (min (- (exwm-workspace--count)
-                                 (* group-idx ewg/max-group-size))
-                              ewg/max-group-size))
-             (member-idx (- exwm-workspace-current-index
-                            (* group-idx ewg/max-group-size)))
-             (next-member-idx (% (+ count member-idx group-size) group-size))
-             (next-workspace-idx (+ (* group-idx ewg/max-group-size)
-                                    next-member-idx)))
-        (exwm-workspace-switch next-workspace-idx)))
+      (exwm-workspace-switch (ewg/get-index-of-other-workspace-in-group count)))
 
     (defun ewg/other-workspace-in-group-backwards () (interactive) (ewg/other-workspace-in-group -1)))
+
+  (progn
+    (defun ewg/swap-with-other-workspace-in-group (count)
+      (interactive "p")
+      (ewg/workspace-swap-by-workspace-indices
+       exwm-workspace-current-index
+       (ewg/get-index-of-other-workspace-in-group count)))
+
+    (defun ewg/swap-with-other-workspace-in-group-backwards ()
+      (interactive)
+      (ewg/swap-with-other-workspace-in-group -1)))
 
   (defun ewg/switch-create-group (group-idx)
     (let* ((current-member-idx (ewg/get-group-member-idx exwm-workspace-current-index))
@@ -167,7 +182,7 @@
 
   (defun ewg/swap-current-group-number (group-number)
     (interactive "nEnter workspace group number: ")
-    (if (> group-number (exwm-workspace--count))
+    (if (> group-number (+ (ewg/get-last-group-index) ewg/workspace-start-number))
         (user-error "Workspace group number is out of range")
       (let ((group-idx (- group-number ewg/workspace-start-number))
             (current-group-idx (ewg/get-group-index exwm-workspace-current-index)))
